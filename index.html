@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniPDF Studio - Swiss Army Knife PDF Tools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .hero-section { background: linear-gradient(135deg, #0d6efd, #052c65); color: white; padding: 35px 20px; border-radius: 0 0 20px 20px; }
+        .card { border: none; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .nav-pills .nav-link.active { background-color: #0d6efd; border-radius: 10px; }
+        .nav-pills .nav-link { color: #495057; font-weight: 600; border-radius: 10px; margin: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section text-center mb-4">
+        <h2 class="fw-bold">⚡ OmniPDF Studio</h2>
+        <p class="mb-0 small">Ubah Gambar, Teks, Gabungkan, Pisah & Rotasi PDF</p>
+    </div>
+
+    <div class="container mb-5">
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show mb-4" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Tab Menu -->
+        <ul class="nav nav-pills nav-justified mb-4 flex-column flex-sm-row" id="pills-tab" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#pills-img">🖼️ Image to PDF</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-txt">📄 Text to PDF</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-merge">📑 Merge PDF</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-split">✂️ Pisah PDF</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-rotate">🔄 Rotasi PDF</button></li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+            
+            <!-- 1. Image to PDF -->
+            <div class="tab-pane fade show active" id="pills-img">
+                <div class="card p-4">
+                    <h5 class="fw-bold text-primary mb-2">Gambar ke PDF</h5>
+                    <p class="text-muted small">Pilih satu atau banyak gambar (JPG, PNG) untuk dijadikan file PDF.</p>
+                    <form action="/convert-image" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3"><input class="form-control" type="file" name="images" multiple accept="image/*" required></div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Konversi & Unduh</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 2. Text to PDF -->
+            <div class="tab-pane fade" id="pills-txt">
+                <div class="card p-4">
+                    <h5 class="fw-bold text-primary mb-2">Teks ke PDF</h5>
+                    <p class="text-muted small">Ketik teks langsung atau upload file .txt untuk dibuat PDF rapi.</p>
+                    <form action="/convert-text" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3"><textarea class="form-control" name="text_content" rows="4" placeholder="Ketik teks..."></textarea></div>
+                        <div class="mb-3"><input class="form-control" type="file" name="text_file" accept=".txt"></div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Konversi & Unduh</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 3. Merge PDF -->
+            <div class="tab-pane fade" id="pills-merge">
+                <div class="card p-4">
+                    <h5 class="fw-bold text-primary mb-2">Gabung PDF</h5>
+                    <p class="text-muted small">Pilih minimal 2 file PDF untuk digabung jadi 1 file PDF.</p>
+                    <form action="/merge-pdf" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3"><input class="form-control" type="file" name="pdf_files" multiple accept="application/pdf" required></div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Gabungkan & Unduh</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 4. Split PDF -->
+            <div class="tab-pane fade" id="pills-split">
+                <div class="card p-4">
+                    <h5 class="fw-bold text-primary mb-2">Pisahkan Halaman PDF</h5>
+                    <p class="text-muted small">Memecah tiap halaman PDF menjadi file tersendiri (diunduh dalam bentuk ZIP).</p>
+                    <form action="/split-pdf" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3"><input class="form-control" type="file" name="pdf_file" accept="application/pdf" required></div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Pisahkan & Unduh ZIP</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 5. Rotate PDF -->
+            <div class="tab-pane fade" id="pills-rotate">
+                <div class="card p-4">
+                    <h5 class="fw-bold text-primary mb-2">Rotasi / Putar Halaman PDF</h5>
+                    <form action="/rotate-pdf" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3"><input class="form-control" type="file" name="pdf_file" accept="application/pdf" required></div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Pilih Derajat Rotasi:</label>
+                            <select class="form-select" name="angle">
+                                <option value="90">90 Derajat (Searah Jarum Jam)</option>
+                                <option value="180">180 Derajat (Terbalik)</option>
+                                <option value="270">270 Derajat (Berlawanan Jarum Jam)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2">Rotasi & Unduh</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
