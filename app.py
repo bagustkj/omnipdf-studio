@@ -165,5 +165,8 @@ def rotate_pdf():
         return redirect(url_for('index'))
 
 
+# Diperlukan untuk Vercel Serverless
+app = app
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
