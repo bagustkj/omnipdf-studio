@@ -155,3 +155,5 @@ def rotate_pdf():
     except Exception:
         flash('Gagal memutar file PDF.', 'danger')
         return redirect(url_for('index'))
+
+app = app
