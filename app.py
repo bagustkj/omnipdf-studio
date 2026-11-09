@@ -11,7 +11,7 @@ from pypdf import PdfWriter, PdfReader
 app = Flask(__name__)
 app.secret_key = "omnipdf-secret-key-super-safe"
 
-# Setup Folder Upload
+
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -23,7 +23,7 @@ def index():
     return render_template('index.html')
 
 
-# 1. FITUR CONVERT IMAGE TO PDF
+#FITUR IMAGE TO PDF
 @app.route('/convert-image', methods=['POST'])
 def convert_image():
     files = request.files.getlist('images')
@@ -83,8 +83,7 @@ def convert_text():
     doc.build(story)
     return send_file(output_path, as_attachment=True, download_name='OmniPDF_Document.pdf')
 
-
-# 3. FITUR MERGE PDF
+#FITUR MERGE PDF
 @app.route('/merge-pdf', methods=['POST'])
 def merge_pdf():
     files = request.files.getlist('pdf_files')
@@ -165,7 +164,6 @@ def rotate_pdf():
         return redirect(url_for('index'))
 
 
-# Diperlukan untuk Vercel Serverless
 app = app
 
 if __name__ == '__main__':
